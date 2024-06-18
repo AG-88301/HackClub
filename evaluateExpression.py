@@ -1,4 +1,3 @@
-
 def calc(expression):
     expression = expression.replace(" ", "").replace("--", '+').replace('+-', '-').replace('-+', '-')
     expr = ['']
@@ -39,6 +38,45 @@ def calc(expression):
             expr[-1] = expr[-1] * 10 + float(i)
         ind += 1
         
-    return expr
+    n = []
+    ind = 0
+    while ind < len(expr):
+        i = expr[ind]
+        if i == '-o':
+            n.append(-expr[ind+1])
+            ind += 2
+        else:
+            n.append(i)
+            ind += 1
+
+    new = [n[0]]
+    ind = 1
+    while ind < len(n):
+        i = n[ind]
+        if i == '*':
+            new[-1] *= n[ind + 1]
+            ind += 2
+        elif i == '/':
+            new[-1] /= n[ind + 1]
+            ind += 2
+        else:
+            new.append(i)
+            ind += 1
+    
+    expr = [new[0]]
+    ind = 1
+    while ind < len(new):
+        i = new[ind]
+        if i == '+':
+            expr[-1] += new[ind + 1]
+            ind += 2
+        elif i == '-':
+            expr[-1] -= new[ind + 1]
+            ind += 2
+        else:
+            new.append(i)
+            ind += 1
+    return int(expr[0]) if expr[0] == int(expr[0]) else expr[0]
+
 expression = input()
 print(calc(expression))
