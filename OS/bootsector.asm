@@ -1,25 +1,18 @@
-mov ah, 0x0e ; tty
+[org 0x7c00]
 
-mov al, [text]
-int 0x10 
+mov bx, HELLO
+call print
+call print_nl
 
-mov bx, 0x7c0 
-mov ds, bx
-mov al, [text]
-int 0x10
-
-mov al, [es:text]
-int 0x10
-
-mov bx, 0x7c0
-mov es, bx
-mov al, [es:text]
-int 0x10
+mov dx, 0x23ff
+call print_hex
 
 jmp $
 
-text:
-    db "X"
+%include "bootsector_print.asm"
 
-times 510 - ($-$$) db 0
+; vars
+HELLO: db 'Hello World!', 0
+
+times 510-($-$$) db 0
 dw 0xaa55
