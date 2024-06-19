@@ -1,35 +1,25 @@
 [org 0x7c00]
-mov bp, 0x8000
+mov bp, 0x9000
 mov sp, bp
 
-mov bx, 0x9000
-mov dh, 2
-call disk_load
-
-; test
-mov bx, MESSAGE
+mov bx, MSG16
 call print
+call switch32
 
-call print_nl
+%include "bootsector_print.asm"
+%include "bootsector_gdt.asm"
+%include "bootsector_switch.asm"
+%include "bootsector_print32.asm"
 
-mov dx, [0x9000]
-call print_hex
-
-call print_nl
-
-mov dx, [0x9000 + 512]
-call print_hex
+[bits 32]
+begin32:
+    mov ebx, MSG32
+    call print32
 
 jmp $
 
-%include "bootsector_print.asm"
-%include "bootsector_disk.asm"
+MSG16 db "Loaded 16-bit real mode", 0
+MSG32 db "Loaded 32-bit protected mode", 0
 
-MESSAGE: db 'Retrieved from disk:', 0
-
-times 510 - ($-$$) db 0
+times 510-($-$$) db 0
 dw 0xaa55
-
-; test data
-times 256 dw 0xde43
-times 256 dw 0xff1f
