@@ -1,15 +1,25 @@
-mov ah, 0x0e 
-mov al, 'H'
-int 0x10
-mov al, 'e'
-int 0x10
-mov al, 'l'
-int 0x10
+mov ah, 0x0e ; tty
+
+mov al, [text]
 int 0x10 
-mov al, 'o'
+
+mov bx, 0x7c0 
+mov ds, bx
+mov al, [text]
 int 0x10
 
-jmp $ 
+mov al, [es:text]
+int 0x10
+
+mov bx, 0x7c0
+mov es, bx
+mov al, [es:text]
+int 0x10
+
+jmp $
+
+text:
+    db "X"
 
 times 510 - ($-$$) db 0
-dw 0xaa55 ; magic number - shows its bootsector
+dw 0xaa55
