@@ -15,7 +15,7 @@ op/kernel.dis: op/kernel.bin
 bootsect.bin: bootsector/bootsector.asm
 	nasm $< -f bin -o $@
 
-op/os_image.bin: bootsector.bin op/kernel.bin
+op/os_image.bin: op/bootsector.bin op/kernel.bin
 	cat $^ > $@
 
 run: op/os_image.bin
