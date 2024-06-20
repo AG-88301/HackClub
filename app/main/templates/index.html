@@ -1,0 +1,22 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'styles.css' %}">
+{%load plotly_dash%}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Graph</title>
+</head>
+<body>
+    <div class="main"></div>
+
+    <div>
+        <div id="lefthalf">
+            {%plotly_app name="Graph" ratio=1%}
+        </div>
+        <div id="righthalf">
+
+        </div>
+    </div>
+</body>
+</html>
