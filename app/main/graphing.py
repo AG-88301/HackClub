@@ -1,4 +1,4 @@
-from dash import dcc, html, Input, Output, State, callback_context, MATCH
+from dash import dcc, html, Input, Output, State, MATCH
 import dash_bootstrap_components as dbc
 from django_plotly_dash import DjangoDash
 import plotly.graph_objects as go
@@ -59,3 +59,16 @@ def addLine(n, mem, div):
     
     return mem, div
 
+@app.callback(
+    [Output('linesDiv', 'children'), Output('memory', 'data')],
+    Input({'type': 'deleteLineButton', 'index': MATCH}, 'n_clicks'),
+    [State({'type': 'deleteLineButton', 'index': MATCH}, 'id'), State('linesDiv', 'children'), State('memory', 'data')],
+    prevent_initial_call=True
+)
+def deleteLine(n, id, div, mem):
+    if n is None:
+        raise PreventUpdate
+    mem['lines'].pop(id['index']-1)
+    div.pop(id['index']-1)
+    
+    return div, mem
