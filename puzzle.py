@@ -43,11 +43,30 @@ def break_pieces(shape):
                 fill(r, c, id)
                 id += 1
                 
-    return shape
+    def process(r, c):
+        if type(shape[r][c]) == int:
+            return
+        
+        if shape[r][c] == '|':
+            if 0 < c and type(shape[r][c-1]) == int:
+                id = shape[r][c-1]
+                shapes[id][r-sizes[id][0]+1][c-sizes[id][1]+1] = '|'
+                
+            if c < len(shape[0])-1 and type(shape[r][c+1]) == int:
+                id = shape[r][c+1]
+                shapes[id][r-sizes[id][0]+1][c-sizes[id][1]+1] = '|'
+                
+    shapes = [[[" "] * (3 + sizes[i][3] - sizes[i][1]) for _ in range(3 + sizes[i][2] - sizes[i][0])] for i in range(id)]
+    for r in range(len(shape)):
+        for c in range(len(shape[0])):
+            process(r, c)
+    
+    shapes = ['\n'.join([''.join(c).rstrip() for c in s]) for s in shapes]
+    return shapes
 
 shape = ""
 lst = ""
 while lst != '.':
     lst = input()
     shape += lst + '\n'
-print('\n'.join(''.join(map(str, i)) for i in break_pieces(shape)))
+print('\n'.join(break_pieces(shape)))
