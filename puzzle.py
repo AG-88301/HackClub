@@ -56,10 +56,42 @@ def break_pieces(shape):
                 id = shape[r][c+1]
                 shapes[id][r-sizes[id][0]+1][c-sizes[id][1]+1] = '|'
                 
+        elif shape[r][c] == '-':
+            if 0 < r and type(shape[r-1][c]) == int:
+                id = shape[r-1][c]
+                shapes[id][r-sizes[id][0]+1][c-sizes[id][1]+1] = '-'
+                
+            if r < len(shape)-1 and type(shape[r+1][c]) == int:
+                id = shape[r+1][c]
+                shapes[id][r-sizes[id][0]+1][c-sizes[id][1]+1] = '-'
+                
+        elif shape[r][c] == '+': 
+            dirs = [(-1, 1), (1, -1), (-1, -1), (1, 1), (0, 1), (1, 0), (-1, 0), (0, -1)]
+            for dx, dy in dirs:
+                if 0 <= r+dx < len(shape) and 0 <= c+dy < len(shape[0]) and type(shape[r+dx][c+dy]) == int:
+                    id = shape[r+dx][c+dy]
+                    shapes[id][r-sizes[id][0]+1][c-sizes[id][1]+1] = '+'
+                
+                
     shapes = [[[" "] * (3 + sizes[i][3] - sizes[i][1]) for _ in range(3 + sizes[i][2] - sizes[i][0])] for i in range(id)]
     for r in range(len(shape)):
         for c in range(len(shape[0])):
             process(r, c)
+            
+    for i in range(len(shapes)):
+        s = shapes[i]
+        for r in range(len(s)):
+            for c in range(len(s[0])):
+                if s[r][c] == '+':
+                    if 0 < r < len(s) - 1:
+                        if s[r+1][c] != ' ' and s[r-1][c] != ' ':
+                            shapes[i][r][c] = '|'
+                    if 0 < c < len(s[0]) - 1:
+                        if s[r][c+1] != ' ' and s[r][c-1] != ' ':
+                            if shapes[i][r][c] == '|':
+                                shapes[i][r][c] = '+'
+                            else:
+                                shapes[i][r][c] = '-'
     
     shapes = ['\n'.join([''.join(c).rstrip() for c in s]) for s in shapes]
     return shapes
